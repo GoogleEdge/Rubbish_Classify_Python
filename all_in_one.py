@@ -1,9 +1,11 @@
 import base64
-import tkinter.messagebox
-from zhipuai import ZhipuAI
 import tkinter
+import threading
+import markdown
+
 from tkinter import filedialog
-import time
+from tkinter import messagebox
+from zhipuai import ZhipuAI
 
 root = tkinter.Tk()
 root.title("垃圾分类")
@@ -15,49 +17,53 @@ key_label.pack()
 key_entry=tkinter.Entry(root)
 key_entry.pack()
 
-upload_button = tkinter.Button(root, text='上传图片', command=lambda: upload(),bg="green")
+upload_button = tkinter.Button(root, text='上传图片', command=lambda: upload())
 upload_button.pack()
- 
-def aiphoto(img_path): 
-    print("[*]执行aiphoto函数")
-    with open(img_path, 'rb') as img_file:
-        img_base = base64.b64encode(img_file.read()).decode('utf-8')
-    global key
-    key = key_entry.get()
-    if key:
-      client = ZhipuAI(api_key=key)
-      print("[*]key获取成功,定义client,发送request")
-      response = client.chat.completions.create(
-      model="glm-4v-flash",
-      messages=[
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "image_url",
-              "image_url": {
-                "url": img_base
-              }
-            },
-            {
-              "type": "text",
-              "text": "直接输出这个图片中的东西应该分类在哪种垃圾，不要输出其他内容。格式：厨余垃圾/其他垃圾/可回收垃圾/有害垃圾"
-            }
-          ]
-        }
-      ]
-    )
-      rubbish_type = response.choices[0].message.content
-      answer = tkinter.Label(text=rubbish_type)
-      answer.pack()
-      print("[*]分类函数内执行knowledge_sc函数")
-      ai_knowledge_sc(rubbish_type)
-    else:
-      print('未输入key')
-      tkinter.messagebox.showwarning("警告","未输入key")
-      
 
-def ai_knowledge_sc(rubbish_type):
+def classify(img_path): 
+  print("[*]执行aiphoto函数")
+  with open(img_path, 'rb') as img_file:
+      img_base = base64.b64encode(img_file.read()).decode('utf-8')
+      if len(img_base) > 2000000:
+        messagebox.showwarning("警告","图片过大，请重新选择")
+  global key
+  key = key_entry.get()
+  if key:
+    client = ZhipuAI(api_key=key)
+    print("[*]key获取成功,定义client,发送request")
+    response = client.chat.completions.create(
+    model="glm-4v-flash",
+    messages=[
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": img_base
+            }
+          },
+          {
+            "type": "text",
+            "text": "直接输出这个图片中的东西应该分类在哪种垃圾，不要输出其他内容。格式：厨余垃圾/其他垃圾/可回收垃圾/有害垃圾"
+          }
+        ]
+      }
+    ]
+  )
+    rubbish_type = response.choices[0].message.content
+    answer = tkinter.Label(text='垃圾类型:'+rubbish_type)
+    answer.pack()
+    print("[*]分类函数内执行knowledge_sc函数")
+    knowledge(rubbish_type)
+  else:
+    print('未输入key')
+    messagebox.showwarning("警告","未输入key")
+
+def start_classify_thread(img_path):
+  threading.Thread(target=classify,args=(img_path)).start()      
+
+def knowledge(rubbish_type):
   print("[*]执行ai_knowledge_sc函数")
   client = client = ZhipuAI(api_key=key)
   print("[*]定义client")
@@ -68,18 +74,23 @@ def ai_knowledge_sc(rubbish_type):
         {"role": "user", "content": str(rubbish_type) + "这类型的垃圾的相关知识"}
     ],
 )
-  knowledge = response.choices[0].message.content
-  knowledge_label = tkinter.Label(text=knowledge)
-  knowledge_label.pack()
-  
+  md_knowledge = response.choices[0].message.content
+  knowledge = markdown.markdown(md_knowledge)
+  knowledge_text = tkinter.Text(root)
+  knowledge_text.pack()
+  knowledge_text.insert(tkinter.END, knowledge)
+  knowledge_text.config(state="disabled")
+
+def start_knowledge_thread(rubbish_type):
+  threading.Thread(target=knowledge,args=(rubbish_type)).start()
 
 def upload():
-    img_path_tuple = filedialog.askopenfilenames(title='选择你需要识别的图片')
-    img_path = str(img_path_tuple[0])
-    if img_path:
-        tkinter.Button(root,text="确定识别",command=lambda:aiphoto(img_path)).pack()
+    img_path_tuple = filedialog.askopenfilenames(title='选择你需要识别的图片',filetypes=[('可以识别的图片','*.jpg *.png *.jpeg')])
+    if img_path_tuple:
+      img_path = str(img_path_tuple[0])
+      tkinter.Button(root,text="确定识别",command=lambda:classify(img_path),bg="green").pack()
     else:
        print('未选择图片')
-       tkinter.messagebox.showwarning("警告","未选择图片")
+       messagebox.showwarning("警告","未选择图片")
 
 root.mainloop()
