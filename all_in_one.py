@@ -3,13 +3,15 @@ import tkinter
 import threading
 import markdown
 
+from tk_html_widgets import HTMLScrolledText
+from PIL import Image, ImageTk
 from tkinter import filedialog
 from tkinter import messagebox
 from zhipuai import ZhipuAI
 
 root = tkinter.Tk()
 root.title("垃圾分类")
-root.geometry("300x300")
+root.geometry("500x300")
 
 key_label = tkinter.Label(text="请先输入你的密钥：")
 key_label.pack()
@@ -79,10 +81,9 @@ def knowledge(rubbish_type):
 )
   md_knowledge = response.choices[0].message.content
   knowledge = markdown.markdown(md_knowledge)
-  knowledge_text = tkinter.Text(root)
-  knowledge_text.pack()
-  knowledge_text.insert(tkinter.END, knowledge)
-  knowledge_text.config(state="disabled")
+  knowledge_html = HTMLScrolledText(root, html=knowledge)
+  knowledge_html.pack()
+  knowledge_html.configure(state='disabled')
 
 def start_knowledge_thread(rubbish_type):
   threading.Thread(target=knowledge,args=(rubbish_type,)).start()
