@@ -29,39 +29,42 @@ def classify(img_path):
   global key
   key = key_entry.get()
   if key:
-    client = ZhipuAI(api_key=key)
-    print("[*]key获取成功,定义client,发送request")
-    response = client.chat.completions.create(
-    model="glm-4v-flash",
-    messages=[
-      {
-        "role": "user",
-        "content": [
-          {
-            "type": "image_url",
-            "image_url": {
-              "url": img_base
+    try:
+      client = ZhipuAI(api_key=key)
+      print("[*]key获取成功,定义client,发送request")
+      response = client.chat.completions.create(
+      model="glm-4v-flash",
+      messages=[
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": img_base
+              }
+            },
+            {
+              "type": "text",
+              "text": "直接输出这个图片中的东西应该分类在哪种垃圾，不要输出其他内容。格式：厨余垃圾/其他垃圾/可回收垃圾/有害垃圾"
             }
-          },
-          {
-            "type": "text",
-            "text": "直接输出这个图片中的东西应该分类在哪种垃圾，不要输出其他内容。格式：厨余垃圾/其他垃圾/可回收垃圾/有害垃圾"
-          }
-        ]
-      }
-    ]
-  )
+          ]
+        }
+      ]
+    )
+    except:
+      messagebox.showwarning("警告","发生异常，请检查key是否正确")
     rubbish_type = response.choices[0].message.content
     answer = tkinter.Label(text='垃圾类型:'+rubbish_type)
     answer.pack()
     print("[*]分类函数内执行knowledge_sc函数")
-    knowledge(rubbish_type)
+    start_knowledge_thread(rubbish_type)
   else:
     print('未输入key')
     messagebox.showwarning("警告","未输入key")
 
 def start_classify_thread(img_path):
-  threading.Thread(target=classify,args=(img_path)).start()      
+  threading.Thread(target=classify,args=(img_path,)).start()      
 
 def knowledge(rubbish_type):
   print("[*]执行ai_knowledge_sc函数")
@@ -82,13 +85,13 @@ def knowledge(rubbish_type):
   knowledge_text.config(state="disabled")
 
 def start_knowledge_thread(rubbish_type):
-  threading.Thread(target=knowledge,args=(rubbish_type)).start()
+  threading.Thread(target=knowledge,args=(rubbish_type,)).start()
 
 def upload():
     img_path_tuple = filedialog.askopenfilenames(title='选择你需要识别的图片',filetypes=[('可以识别的图片','*.jpg *.png *.jpeg')])
     if img_path_tuple:
       img_path = str(img_path_tuple[0])
-      tkinter.Button(root,text="确定识别",command=lambda:classify(img_path),bg="green").pack()
+      tkinter.Button(root,text="确定识别",command=lambda:start_classify_thread(img_path),bg="green").pack()
     else:
        print('未选择图片')
        messagebox.showwarning("警告","未选择图片")
