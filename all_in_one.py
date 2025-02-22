@@ -2,6 +2,7 @@ import base64
 import tkinter
 import threading
 import markdown
+from tkinter import ttk
 
 from tk_html_widgets import HTMLScrolledText
 from PIL import Image, ImageTk
@@ -11,16 +12,22 @@ from zhipuai import ZhipuAI
 
 root = tkinter.Tk()
 root.title("垃圾分类")
-root.geometry("500x300")
+root.geometry("800x400")
+
+style = ttk.Style()
+style.configure("TButton",  padding=10, relief="flat", background="#4CAF50", foreground="black")
+
+tutorial_label = tkinter.Label(text="教程:请先获取BigModel提供的API密钥，根据按钮的提示进行操作",bg="red",fg="white")
+tutorial_label.place(x=50,y=0)
 
 key_label = tkinter.Label(text="请先输入你的密钥：")
-key_label.pack()
+key_label.place(x=50,y=30)
 
-key_entry=tkinter.Entry(root)
-key_entry.pack()
+key_entry=tkinter.Entry(root,width=14)
+key_entry.place(x=50,y=50)
 
-upload_button = tkinter.Button(root, text='上传图片', command=lambda: upload())
-upload_button.pack()
+upload_button = ttk.Button(root, text='上传图片', command=lambda: upload(), style="TButton")
+upload_button.place(x=50,y=80)
 
 def classify(img_path): 
   print("[*]执行aiphoto函数")
@@ -58,7 +65,7 @@ def classify(img_path):
       messagebox.showwarning("警告","发生异常，请检查key是否正确")
     rubbish_type = response.choices[0].message.content
     answer = tkinter.Label(text='垃圾类型:'+rubbish_type)
-    answer.pack()
+    answer.place(x=200,y=30)
     print("[*]分类函数内执行knowledge_sc函数")
     start_knowledge_thread(rubbish_type)
   else:
@@ -82,7 +89,7 @@ def knowledge(rubbish_type):
   md_knowledge = response.choices[0].message.content
   knowledge = markdown.markdown(md_knowledge)
   knowledge_html = HTMLScrolledText(root, html=knowledge)
-  knowledge_html.pack()
+  knowledge_html.place(x=200,y=50)
   knowledge_html.configure(state='disabled')
 
 def start_knowledge_thread(rubbish_type):
@@ -92,7 +99,7 @@ def upload():
     img_path_tuple = filedialog.askopenfilenames(title='选择你需要识别的图片',filetypes=[('可以识别的图片','*.jpg *.png *.jpeg')])
     if img_path_tuple:
       img_path = str(img_path_tuple[0])
-      tkinter.Button(root,text="确定识别",command=lambda:start_classify_thread(img_path),bg="green").pack()
+      tkinter.Button(root,text="确定识别",command=lambda:start_classify_thread(img_path),height=2,width=13).place(x=50,y=130)
     else:
        print('未选择图片')
        messagebox.showwarning("警告","未选择图片")
