@@ -12,12 +12,9 @@ from zhipuai import ZhipuAI
 
 root = tkinter.Tk()
 root.title("垃圾分类")
-root.geometry("800x400")
+root.geometry("500x300")
 
-style = ttk.Style()
-style.configure("TButton",  padding=10, relief="flat", background="#4CAF50", foreground="black")
-
-tutorial_label = tkinter.Label(text="教程:请先获取BigModel提供的API密钥，根据按钮的提示进行操作",bg="red",fg="white")
+tutorial_label = tkinter.Label(text="教程:请获取API密钥使用，根据按钮的提示进行操作",bg="red",fg="white")
 tutorial_label.place(x=50,y=0)
 
 key_label = tkinter.Label(text="请先输入你的密钥：")
@@ -26,6 +23,8 @@ key_label.place(x=50,y=30)
 key_entry=tkinter.Entry(root,width=14)
 key_entry.place(x=50,y=50)
 
+style = ttk.Style()
+style.configure("TButton",  padding=10, relief="flat", background="#4CAF50", foreground="black")
 upload_button = ttk.Button(root, text='上传图片', command=lambda: upload(), style="TButton")
 upload_button.place(x=50,y=80)
 
@@ -99,7 +98,7 @@ def upload():
     img_path_tuple = filedialog.askopenfilenames(title='选择你需要识别的图片',filetypes=[('可以识别的图片','*.jpg *.png *.jpeg')])
     if img_path_tuple:
       img_path = str(img_path_tuple[0])
-      tkinter.Button(root,text="确定识别",command=lambda:start_classify_thread(img_path),height=2,width=13).place(x=50,y=130)
+      tkinter.ttk.Button(root,text="确定识别",command=lambda:start_classify_thread(img_path),style="TButton").place(x=50,y=130)
     else:
        print('未选择图片')
        messagebox.showwarning("警告","未选择图片")
