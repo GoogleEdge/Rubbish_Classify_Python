@@ -10,4 +10,7 @@
 4. 下载`all_in_one.py`文件，运行即可。
 
 **注意：** 需要事先获取智谱API Key。
+
 **本项目使用MIT协议**
+
+NDcyYTA3NzUwOTA3NDYwNDkzMmVmZTEwMWRmYzE1OGYuejlzb1BjS2x1c2xzQWcxbw==
