@@ -11,18 +11,13 @@
 
 垃圾分类知识普及：提供垃圾分类知识学习模块，帮助用户了解垃圾分类的重要性及方法。
 
-数据统计与分析：统计用户参与垃圾分类的数据，分析用户垃圾分类习惯，为环保部门提供参考。
-
 技术实现：
-**python使用ZhipuAI库sdk进行get和send，安装方式pip：pip install zhipuai，文档https://www.bigmodel.cn/dev/api/devguide/sdk-install**
+**python使用ZhipuAI库sdk，安装方式：pip install zhipuai，[文档](https://www.bigmodel.cn/dev/api/devguide/sdk-install)**
 
-使用智谱AI的https://www.bigmodel.cn/dev/api/normal-model/glm-4 glm-4v-flash模型，进行垃圾图片识别。*api会在后续发放*
+使用智谱[GLM-4V-FLASH](https://www.bigmodel.cn/dev/api/normal-model/glm-4v)模型，进行垃圾图片识别。
 
-使用智普清言提供的https://www.bigmodel.cn/dev/api/normal-model/glm-4 glm-4-flash模型，提供垃圾分类知识、信息
+使用智谱[GLM-4-FLASH](https://www.bigmodel.cn/dev/api/normal-model/glm-4)模型，提供垃圾分类知识、信息
 
-使用Python的Flask或Django框架搭建Web应用，实现用户交互界面。（会尝试向雨云借个服务器部署）
-
-数据存储采用MySQL或SQLite数据库。
 
 项目亮点：
 
