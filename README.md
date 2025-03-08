@@ -5,6 +5,12 @@
 
 直接下载EXE运行即可[v2.0.exe](https://github.com/GoogleEdge/Rubbish_Classify_Python/releases/download/v2.2.0/V2.0.exe)
 
+# 接下来？
+
+考虑在Android以及HarmonyOS(Next)上开发**手机版本**，**优先考虑HarmonyOS Next**。
+
+*至于为什么不在iOS上......没钱！(Doge)*
+
 **注意：** 需要事先获取智谱API Key。
 
 **本项目使用MIT协议**
