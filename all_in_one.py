@@ -15,7 +15,7 @@ def classify(img_path):
             messagebox.showwarning("警告", "图片大小超过500MB")
         img_base = base64.b64encode(img_file.read()).decode('utf-8') 
     global key
-    key = "472a077509074604932efe101dfc158f.z9soPcKluslsAg1o"
+    key = "472a077509074604932af3q01dfc158f.z9soPcKlusPk4g1o"
     try:
         root.after(0, lambda: statu_label.configure(text="状态：正在识别垃圾类型..."))
         client = ZhipuAI(api_key=key)
