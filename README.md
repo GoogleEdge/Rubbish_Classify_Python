@@ -1,6 +1,8 @@
 # 基于Python的AI垃圾分类应用
 详见[比赛项目](https://github.com/GoogleEdge/SRSC_JDYC_710/blob/main/idea.md)
 
+本作品已获得广东省2025粤港澳学生创新大赛二等奖
+
 ## 使用方法
 
 直接下载EXE运行即可[v2.0.exe](https://github.com/GoogleEdge/Rubbish_Classify_Python/releases/download/v2.2.0/V2.0.exe)
