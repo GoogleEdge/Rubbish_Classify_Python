@@ -1,7 +1,6 @@
 # 基于Python的AI垃圾分类应用
 详见[比赛项目](https://github.com/GoogleEdge/SRSC_JDYC_710/blob/main/idea.md)
 
-本作品已获得广东省2025粤港澳学生创新大赛二等奖
 
 ## 使用方法
 
